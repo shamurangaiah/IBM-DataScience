@@ -114,7 +114,8 @@ def update_output_container(input_year, selected_statistics):
                     figure=px.bar(bar_data, 
                     x='unemployment_rate', 
                     y='Automobile_Sales', 
-                    color='Vehicle_Type'
+                    color='Vehicle_Type',
+                    title="Effect of unemployment rate on vehicle type and sales"
                     )
         ) 
       
@@ -129,7 +130,7 @@ def update_output_container(input_year, selected_statistics):
  # Yearly Statistic Report Plots                             
     # elif (input_year and selected_statistics=='Yearly Statistics') :
     elif (selected_statistics=='Yearly Statistics') :
-        yearly_data = data[data['Year'] == '1990' ] #'input_year]
+        yearly_data = data[data['Year'] == input_year]
                           
 #TASK 2.5: Creating Graphs Yearly data
                               
@@ -158,8 +159,9 @@ def update_output_container(input_year, selected_statistics):
 
             # Plot bar chart for average number of vehicles sold during the given year
         avr_vdata=yearly_data.groupby('Year')['Automobile_Sales'].mean().reset_index()
+        avr_vdata['Year'] = avr_vdata['Year'].astype(str)
         Y_chart3 = dcc.Graph( 
-                        figure=px.line(
+                        figure=px.bar(
                         avr_vdata,
                         x='Year',
                         y='Automobile_Sales',
@@ -180,7 +182,7 @@ def update_output_container(input_year, selected_statistics):
 #TASK 2.6: Returning the graphs for displaying Yearly data
         return [
                 html.Div(className='chart-item', children=[html.Div(Y_chart1),html.Div(Y_chart2)],style={'display': 'flex'}),
-                html.Div(className='chart-item', children=[html.Div(Y_chart4),html.Div(Y_chart4)],style={'display': 'flex'})
+                html.Div(className='chart-item', children=[html.Div(Y_chart3),html.Div(Y_chart4)],style={'display': 'flex'})
                 ]
         
     else:
