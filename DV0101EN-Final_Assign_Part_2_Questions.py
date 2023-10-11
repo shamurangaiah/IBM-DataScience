@@ -170,7 +170,7 @@ def update_output_container(input_year, selected_statistics):
                         )
 
             # Total Advertisement Expenditure for each vehicle using pie chart
-        exp_data=yearly_data.groupby('Vehicle_Type')['Advertising_Expenditure'].sum().reset_index()
+        exp_data=data.groupby('Vehicle_Type')['Advertising_Expenditure'].sum().reset_index()
         Y_chart4 = dcc.Graph( figure=px.pie(
                     exp_data, 
                     values='Advertising_Expenditure', 
