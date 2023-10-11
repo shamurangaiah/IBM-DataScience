@@ -63,9 +63,9 @@ app.layout = html.Div([
 
 def update_input_container(selected_statistics):
     if selected_statistics =='Recession Period Statistics': 
-        return False
+        return True 
     else: 
-        return True
+        return False
 
 #Callback for plotting
 # Define the callback function to update the input container based on the selected statistics
@@ -109,10 +109,10 @@ def update_output_container(input_year, selected_statistics):
         ) 
 
 # Plot 4 bar chart for the effect of unemployment rate on vehicle type and sales
-        bar_data = recession_data.groupby(['Unemployment_Rate','Vehicle_Type'], as_index=False)['Automobile_Sales'].mean().reset_index()
+        bar_data = recession_data.groupby(['unemployment_rate','Vehicle_Type'], as_index=False)['Automobile_Sales'].mean().reset_index()
         R_chart4 = dcc.Graph(
                     figure=px.bar(bar_data, 
-                    x='Unemployment_Rate', 
+                    x='unemployment_rate', 
                     y='Automobile_Sales', 
                     color='Vehicle_Type'
                     )
@@ -127,8 +127,9 @@ def update_output_container(input_year, selected_statistics):
 
 # TASK 2.6: Create and display graphs for Yearly Report Statistics
  # Yearly Statistic Report Plots                             
-    elif (input_year and selected_statistics=='Yearly Statistics report') :
-        yearly_data = data[data['Year'] == input_year]
+    # elif (input_year and selected_statistics=='Yearly Statistics') :
+    elif (selected_statistics=='Yearly Statistics') :
+        yearly_data = data[data['Year'] == '1990' ] #'input_year]
                           
 #TASK 2.5: Creating Graphs Yearly data
                               
@@ -143,11 +144,13 @@ def update_output_container(input_year, selected_statistics):
                         )
             
 # Plot 2 Total Monthly Automobile sales using line chart.
+        monthly_sales = data.groupby(['Year', 'Month'], as_index=False)['Automobile_Sales'].sum()
         Y_chart2 = dcc.Graph(
                         figure=px.line(
-                        yas,
-                        x='Month',
-                        y='Automobile_Sales',
+                        monthly_sales,
+                        x='Month', 
+                        y='Automobile_Sales', 
+                        color='Year',
                         title="Average Automobile Sales fluctuation over Period by Month"
                         )
                         )
@@ -156,7 +159,7 @@ def update_output_container(input_year, selected_statistics):
             # Plot bar chart for average number of vehicles sold during the given year
         avr_vdata=yearly_data.groupby('Year')['Automobile_Sales'].mean().reset_index()
         Y_chart3 = dcc.Graph( 
-                        figure=pix.line(
+                        figure=px.line(
                         avr_vdata,
                         x='Year',
                         y='Automobile_Sales',
@@ -165,7 +168,7 @@ def update_output_container(input_year, selected_statistics):
                         )
 
             # Total Advertisement Expenditure for each vehicle using pie chart
-        exp_data=yearly_data.groupby('Vehicle_Type')['Advertising_Expenditure'].sum()
+        exp_data=yearly_data.groupby('Vehicle_Type')['Advertising_Expenditure'].sum().reset_index()
         Y_chart4 = dcc.Graph( figure=px.pie(
                     exp_data, 
                     values='Advertising_Expenditure', 
@@ -186,4 +189,3 @@ def update_output_container(input_year, selected_statistics):
 # Run the Dash app
 if __name__ == '__main__':
     app.run_server(debug=True)
-
